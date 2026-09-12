@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcp-legacy-compat-shim"
+version = "0.1.0"
+description = "ASGI middleware fixing the MCP Python SDK 1.x id-correlation bug that breaks fallback for 2026-07-28-era clients"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio", "asgi-lifespan", "httpx", "mcp>=1.20,<2"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_legacy_compat_shim"]
