@@ -63,8 +63,11 @@ app = LegacyCompatShim(mcp.streamable_http_app())
 
 ## Verification
 
-Tested against the real, installed `mcp==1.26.0` package -- not a mock of
-it. The test suite reproduces the actual bug first (a raw v1.x app really
+CI runs the test suite against `mcp` 1.20.0, 1.26.0, and 1.30.0 (the floor
+and ceiling of the declared `mcp>=1.20,<2` range, plus the version this
+shim was originally built against) across Python 3.10 and 3.12 -- every
+combination against the real, installed SDK, not a mock of it. The test
+suite reproduces the actual bug first (a raw v1.x app really
 does return `"id": "server-error"`, discarding the real request id), then
 proves the shim fixes it (the same request, same server, wrapped, returns
 the real id), including edge cases that are easy to get wrong: an id of
@@ -76,8 +79,6 @@ identical whether or not the shim is wrapped around it.
 
 ## Known open items
 
-- Verified against `mcp==1.26.0` specifically; not yet run across the
-  full 1.x version range.
 - Only adds a minimal path for legacy servers to survive a
   `server/discover` probe long enough to fall back -- doesn't implement
   the new protocol era's other features (`subscriptions/listen`,

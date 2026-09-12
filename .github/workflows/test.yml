@@ -1,0 +1,29 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+        # Floor and ceiling of the declared mcp>=1.20,<2 support range,
+        # plus 1.26.0 as the version this shim was originally built and
+        # verified against.
+        mcp-version: ["1.20.0", "1.26.0", "1.30.0"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - run: pip install "mcp==${{ matrix.mcp-version }}" pytest pytest-asyncio asgi-lifespan httpx
+
+      - run: pip install -e .
+
+      - run: pytest -v
